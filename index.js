@@ -36,6 +36,12 @@ let myDB = {
     ]
 }
 
+
+app.get("/games",(req, res) => {
+    res.statusCode = 200
+    res.json(myDB.games)
+})
+
 app.listen(8080,() => {
     console.log("API executing...")
 })
