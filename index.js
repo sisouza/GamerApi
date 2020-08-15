@@ -42,6 +42,27 @@ app.get("/games",(req, res) => {
     res.json(myDB.games)
 })
 
+app.get("/games/:id",(req,res) =>{
+
+    //set a "ERROR" statusCode
+    if(isNaN(req.params.id)){
+        res.sendStatus(400)
+    }else{
+        
+    //checking if this game exists in myDB    
+        let id = parseInt(req.params.id)
+        
+        let game = myDB.games.find(game => game.id == id)
+
+        if(game != undefined){
+            res.statusCode = 200
+            res.json(game)
+        }else{
+            res.sendStatus(404)
+        }
+    }
+})
+
 app.listen(8080,() => {
     console.log("API executing...")
 })
