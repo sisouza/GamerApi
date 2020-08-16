@@ -63,6 +63,20 @@ app.get("/games/:id",(req,res) =>{
     }
 })
 
+app.post("/game",(req,res) =>{
+
+    let {title, price, year} = req.body
+
+    myDB.games.push({
+        id: 5,
+        title,
+        price,
+        year
+    })
+
+    res.sendStatus(201)
+})
+
 app.listen(8080,() => {
     console.log("API executing...")
 })
