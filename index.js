@@ -77,6 +77,23 @@ app.post("/game",(req,res) =>{
     res.sendStatus(201)
 })
 
+
+app.delete("/game/:id",(req,res) => {
+    if(isNaN(req.params.id)){
+        res.sendStatus(400)
+    }else{
+        let id = parseInt(req.params.id)
+        let game = myDB.games.findIndex(game => game.id == id)
+
+        if(index == -1){
+            res.sendStatus(404)
+        }else{
+            myDB.games.splice(index,1)
+            res.sendStatus(200)
+        }
+    }   
+})
+
 app.listen(8080,() => {
     console.log("API executing...")
 })
