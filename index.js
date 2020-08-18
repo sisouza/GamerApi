@@ -94,6 +94,39 @@ app.delete("/game/:id",(req,res) => {
     }   
 })
 
+//editing game
+app.put("/game/:id", (req,res) => {
+    let id = parseInt(req.params.id)
+
+    let game = myDB.games.find(game => game.if === id)
+
+    //add more validation(price,year e etc...)
+    if(game != undefined){
+
+        let {title, price, year} = req.body
+            
+
+    if(title != undefined){
+        game.title = title
+    }     
+    
+
+    if(price != undefined){
+        game.price = price
+    }   
+
+    if(year != undefined){
+        game.year = year
+    } 
+    
+    res.sendStatus(200)
+
+    }else{
+        res.sendStatus(404)
+    }
+
+})
+
 app.listen(8080,() => {
     console.log("API executing...")
 })
