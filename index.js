@@ -96,14 +96,18 @@ app.delete("/game/:id",(req,res) => {
 
 //editing game
 app.put("/game/:id", (req,res) => {
+    if(isNaN(req.params.id)){
+        res.sendStatus(400)
+    }else{
+    
     let id = parseInt(req.params.id)
 
-    let game = myDB.games.find(game => game.if === id)
+    let game = myDB.games.find(game => game.id == id)
 
     //add more validation(price,year e etc...)
     if(game != undefined){
 
-        let {title, price, year} = req.body
+    let {title, price, year} = req.body
             
 
     if(title != undefined){
@@ -112,7 +116,10 @@ app.put("/game/:id", (req,res) => {
     
 
     if(price != undefined){
-        game.price = price
+        if(price == isNaN(req.body.price)){
+            res.sendStatus(404)
+       } 
+       game.price = price
     }   
 
     if(year != undefined){
@@ -124,7 +131,7 @@ app.put("/game/:id", (req,res) => {
     }else{
         res.sendStatus(404)
     }
-
+}
 })
 
 app.listen(8080,() => {
