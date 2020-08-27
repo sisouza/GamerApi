@@ -87,7 +87,7 @@ app.delete("/game/:id",(req,res) => {
         res.sendStatus(400)
     }else{
         let id = parseInt(req.params.id)
-        let game = myDB.games.findIndex(game => game.id == id)
+        let index = myDB.games.findIndex(game => game.id == id)
 
         if(index == -1){
             res.sendStatus(404)
@@ -113,11 +113,9 @@ app.put("/game/:id", (req,res) => {
 
     let {title, price, year} = req.body
             
-
     if(title != undefined){
         game.title = title
     }     
-    
 
     if(price != undefined){
         if(price == isNaN(req.body.price)){
