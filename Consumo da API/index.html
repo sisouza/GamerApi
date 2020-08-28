@@ -7,6 +7,21 @@
     <hr>
     <h4>Lista de games</h4>
     <ul id="games" ></ul>
+    <hr>
+    <h4>Novo Game</h4>
+    <input type="text" name="title" id="title" placeholder="Titulo"><br>
+    <input type="number" name="year" id="year" placeholder="Ano"><br>
+    <input type="number" name="price" id="price" placeholder="Preço"><br>
+    <button type="button" onclick="createGame()">Criar</button>
+
+    <hr>
+    <h4>Editar Game</h4>
+    <input type="text" name="idEdit" id="idEdit" placeholder="ID" readonly><br>
+    <input type="text" name="titleEdit" id="titleEdit" placeholder="Titulo"><br>
+    <input type="number" name="yearEdit" id="yearEdit" placeholder="Ano"><br>
+    <input type="number" name="priceEdit" id="priceEdit" placeholder="Preço"><br>
+    <button type="button" onclick="updateGame()">Editar</button>
+    
 </head>
 <body>
 
@@ -14,14 +29,114 @@
 </body>
 
 <script src ="https://unpkg.com/axios/dist/axios.min.js"></script>
+
 <script>
+    //função responsavel em coletar os dados dos inputs 
+    function createGame(){
+        let titleInput = document.getElementById("title");
+        let yearInput = document.getElementById("year");
+        let priceInput = document.getElementById("price");
+
+        //json
+        let game = {
+            title: titleInput.value,
+            year: yearInput.value,
+            price: priceInput.value
+        }
+
+        //enviando dado para api
+        axios.post("http://localhost:8080/game",game).then(response => {
+            if(response.status == 200){
+                alert("Game Cadastrado!")
+            }
+        }).catch(error => {
+            console.log(error);
+        })
+    }
+
+
+    function deletGame(listItem){
+        let id = listItem.getAttribute("data-id");
+        axios.delete("http://localhost:8080/game/"+id).then(response => {
+            alert("Game deletado!")
+        }).catch(error => {
+            console.log(error);
+        });
+    }
+
+    //editando game
+    function editForm(listItem){
+        console.log(listItem);
+        let id = listItem.getAttribute("data-id");
+        let title = listItem.getAttribute("data-title");
+        let year = listItem.getAttribute("data-year");
+        let price = listItem.getAttribute("data-price");
+
+        document.getElementById("idEdit").value = id;
+        document.getElementById("titleEdit").value = title;
+        document.getElementById("yearEdit").value = year;
+        document.getElementById("priceEdit").value = price;
+
+    }
+
+    //atualizando edição de game
+    function updateGame(){
+        let idInput = document.getElementById("idEdit");
+        let titleInput = document.getElementById("titleEdit");
+        let yearInput = document.getElementById("yearEdit");
+        let priceInput = document.getElementById("priceEdit");
+
+        //json
+        let game = {
+            title: titleInput.value,
+            year: yearInput.value,
+            price: priceInput.value
+        }
+
+        let id = idInput.value;
+
+        //enviando dado para api
+        axios.post("http://localhost:8080/game/"+id,game).then(response => {
+            if(response.status == 200){
+                alert("Game Atualizado!")
+            }
+        }).catch(error => {
+            console.log(error);
+        })
+
+    }
+
+
     axios.get("http://localhost:8080/games").then(response => {
         let games = response.data;
         let list = document.getElementById("games");
         
         games.forEach(game => {
             let item = document.createElement("li");
+
+    //atributos customizados, deve ser usado "data" na nomeclatura, atribua a ele o que achar necessario
+            item.setAttribute("data-id",game.id);
+            item.setAttribute("data-title",game.title);
+            item.setAttribute("data-year",game.year);
+            item.setAttribute("data-year",game.price);
+
             item.innerHTML = game.id + " - " + game.title;
+
+            let deleteBtn = document.createElement("button");
+            deleteBtn.innerHTML = "Deletar";
+            deleteBtn.addEventListener("click",function(){
+                deletGame(item);
+            });
+
+            let editBtn = document.createElement("button");
+            editBtn.innerHTML = "Editar";
+            editBtn.addEventListener("click",function(){
+
+            })
+
+            item.appendChild(deleteBtn);
+            item.appendChild(editBtn);
+
             list.appendChild(item);
         });
 
