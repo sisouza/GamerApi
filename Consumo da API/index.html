@@ -64,9 +64,24 @@
         });
     }
 
+    //carregando os dados dos games para a edição
+    function loadForm(listItem){
+
+        let id = listItem.getAttribute("data-id")
+        let title = listItem.getAttribute("data-title")
+        let price = listItem.getAttribute("data-price")
+        let year = listItem.getAttribute("data-year")
+
+        //pegando o elemento por seu id do form editar e atribuindo seu valor como as vars acima
+        document.getElementById("idEdit").value = id
+        document.getElementById("titleEdit").value = title
+        document.getElementById("priceEdit").value = price
+        document.getElementById("yearEdit").value = year
+    }
+
     //editando game
     function editForm(listItem){
-        console.log(listItem);
+     
         let id = listItem.getAttribute("data-id");
         let title = listItem.getAttribute("data-title");
         let year = listItem.getAttribute("data-year");
@@ -95,8 +110,8 @@
 
         let id = idInput.value;
 
-        //enviando dado para api
-        axios.post("http://localhost:8080/game/"+id,game).then(response => {
+        //enviando os dados do game atualizado para api
+        axios.put("http://localhost:8080/game/"+id,game).then(response => {
             if(response.status == 200){
                 alert("Game Atualizado!")
             }
@@ -118,7 +133,7 @@
             item.setAttribute("data-id",game.id);
             item.setAttribute("data-title",game.title);
             item.setAttribute("data-year",game.year);
-            item.setAttribute("data-year",game.price);
+            item.setAttribute("data-price",game.price);
 
             item.innerHTML = game.id + " - " + game.title;
 
@@ -131,7 +146,7 @@
             let editBtn = document.createElement("button");
             editBtn.innerHTML = "Editar";
             editBtn.addEventListener("click",function(){
-
+                    loadForm(item);
             })
 
             item.appendChild(deleteBtn);
