@@ -84,8 +84,27 @@ let myDB = {
 
 
 app.get("/games",auth,(req, res) => {
+
+    let HATEOAS =  [
+        {
+            href: "http://localhost:8080/game/0",
+            method: "DELETE",
+            rel: "delete_game"
+        },
+        {
+            href: "http://localhost:8080/game/0",
+            method: "GET",
+            rel: "get_game"
+        },
+        {
+            href: "http://localhost:8080/auth",
+            method: "GET",
+            rel: "get_game"
+        }
+    ]
+
     res.statusCode = 200
-    res.json(myDB.games)
+    res.json({games: myDB.games, _links: HATEOAS});
 })
 
 app.get("/games/:id",auth,(req,res) =>{
@@ -98,11 +117,34 @@ app.get("/games/:id",auth,(req,res) =>{
     //checking if this game exists in myDB    
         let id = parseInt(req.params.id)
         
+        let HATEOAS =  [
+            {
+                href: "http://localhost:8080/game/"+id,
+                method: "DELETE",
+                rel: "delete_game"
+            },
+            {
+                href: "http://localhost:8080/game/"+id,
+                method: "PUT",
+                rel: "edit_game"
+            },
+            {
+                href: "http://localhost:8080/game/"+id,
+                method: "GET",
+                rel: "get_game"
+            },
+            {
+                href: "http://localhost:8080/games",
+                method: "GET",
+                rel: "get_all_game"
+            }
+        ]
+
         let game = myDB.games.find(game => game.id == id)
 
         if(game != undefined){
             res.statusCode = 200
-            res.json(game)
+            res.json({game, _links: HATEOAS})
         }else{
             res.sendStatus(404)
         }
